@@ -35,7 +35,7 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 	DataBaseOperation db;
 
 	/**
-	 * Pour communiquer avec la classe qui l'héberge
+	 * Pour communiquer avec l'activité qui possède le fragment
 	 */
 	private OnSocieteSelected societeFragListener;
 
