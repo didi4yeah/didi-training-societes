@@ -32,13 +32,13 @@ public class SocieteDetailsFragment extends Fragment {
 		return view;
 	}
 	
-	@Override
-	public void onDestroy() {		
-		super.onDestroy();
-		if(db != null){
-			db.close();	
-		}		
-	}
+//	@Override
+//	public void onDestroy() {		
+//		super.onDestroy();
+//		if(db != null){
+//			db.close();	
+//		}		
+//	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

@@ -91,13 +91,13 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 		handleButtons();		
 	}
 	
-	@Override
-	public void onDestroy() {		
-		super.onDestroy();
-		if(db != null){
-			db.close();	
-		}		
-	}
+//	@Override
+//	public void onDestroy() {		
+//		super.onDestroy();
+//		if(db != null){
+//			db.close();	
+//		}		
+//	}
 
 	//implement loadInBackground from abstract
 	public static final class ListCursorLoader extends SimpleCursorLoader {
@@ -132,9 +132,9 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);
-		if(db != null){
-			db.close();	
-		}				
+//		if(db != null){
+//			db.close();	
+//		}				
 	}
 
 	@Override
@@ -157,9 +157,7 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 		Societe societe = null;
 		
 		int random_choice = new Random().nextInt(3);
-		
-		Log.e("choice", ""+random_choice);
-		
+				
 		switch (random_choice) {
 		case 0:
 			societe = new Societe("Omnilog", Societe.type_societe.SSII,
