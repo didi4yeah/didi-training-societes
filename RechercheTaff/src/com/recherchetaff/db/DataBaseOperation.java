@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DataBaseOperation {
 
-	private static final int VERSION_BDD = 10;
+	private static final int VERSION_BDD = 16;
 	private static final String NOM_BDD = "societes.db";
 
 	private SQLiteDatabase bdd;

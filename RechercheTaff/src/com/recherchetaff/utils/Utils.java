@@ -11,20 +11,24 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
+/**
+ * Utils class with various functions
+ * @author David
+ *
+ */
 public class Utils {
-
 	
 	/**
-	 * get data from a url.
+	 * Get data from a url.
 	 * 
-	 * @param aUrl where to get the data.
+	 * @param urlAddress where to get the data.
 	 * @return the data.
 	 */
-	public static byte[] getImage(String aUrl) {
+	public static byte[] getImage(String urlAddress) {
 		HttpGet lRequest = new HttpGet();
 		byte[] lAnswer = null;
 		try {
-			lRequest.setURI(new URI(aUrl));
+			lRequest.setURI(new URI(urlAddress));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

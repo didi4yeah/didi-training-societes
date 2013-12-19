@@ -1,5 +1,7 @@
 package com.recherchetaff.fragments;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
@@ -30,10 +32,10 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 	LoaderManager loadermanager;		
 	CursorLoader cursorLoader;
 
-	static DataBaseOperation db;
+	DataBaseOperation db;
 
 	/**
-	 * Permet au fragment de communiquer avec la classe qui l'héberge.
+	 * Pour communiquer avec la classe qui l'héberge
 	 */
 	private OnSocieteSelected societeFragListener;
 
@@ -43,7 +45,7 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 
 	/**
 	 * Appelée lorsque le fragment vient d'être attaché à une activité. 
-	 * NB : Appelé uniquement pour le premier fragment.
+	 * Juste fait pour le premier fragment.
 	 * */
 	@Override
 	public void onAttach(Activity activity) {
@@ -88,6 +90,14 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 
 		handleButtons();		
 	}
+	
+	@Override
+	public void onDestroy() {		
+		super.onDestroy();
+		if(db != null){
+			db.close();	
+		}		
+	}
 
 	//implement loadInBackground from abstract
 	public static final class ListCursorLoader extends SimpleCursorLoader {
@@ -100,16 +110,14 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 		}
 
 		@Override
-		public Cursor loadInBackground() {
-			
-//			fakeInitDB();
+		public Cursor loadInBackground() {			
 			
 			Cursor cursor = null;
 
 			cursor = mDB.getAllSocietes();
 
 			if (cursor != null) {				
-				Log.e("count", ""+cursor.getCount());
+				Log.e("count societes", ""+cursor.getCount());
 			}
 
 			return cursor;
@@ -124,44 +132,58 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);
+		if(db != null){
+			db.close();	
+		}				
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
+	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
-
 	}
 
 	private DataBaseOperation getDB() {
 		if (db == null) {
 			db = new DataBaseOperation(getActivity());
 			db.open();
+		} else if(!db.getBDD().isOpen()){
+			db.open();
 		}
 		return db;
 	}
 
-	public static void fakeInitDB(){
-
-		Societe societe = new Societe("Omnilog", Societe.type_societe.SSII,
-				"32 rue d'Orléans 92200 Neuilly-sur-seine",
-				"http://dadou93190.free.fr/img_logo_societes/logo_omnilog.jpg",
-				"http://www.omnilog.fr");
-
-		db.insertSociete(societe);
-
-		societe = new Societe("Extia", Societe.type_societe.SSII,
-				"1 Avenue de la Cristallerie 92310 Sèvres",
-				"http://dadou93190.free.fr/img_logo_societes/logo_extia.png",
-				"http://www.extia.fr");
+	private void fakeInitDB(){
 		
-		db.insertSociete(societe);
+		Societe societe = null;
 		
-		societe = new Societe("miLibris", Societe.type_societe.CLIENT_FINAL,
-				"21 rue de la banque 75002 Paris",
-				"http://dadou93190.free.fr/img_logo_societes/logo_milibris.jpg",
-				"http://www.milibris.fr");
-
-		db.insertSociete(societe);
+		int random_choice = new Random().nextInt(3);
+		
+		Log.e("choice", ""+random_choice);
+		
+		switch (random_choice) {
+		case 0:
+			societe = new Societe("Omnilog", Societe.type_societe.SSII,
+					"32 rue d'Orléans 92200 Neuilly-sur-seine",
+					"http://dadou93190.free.fr/img_logo_societes/logo_omnilog.jpg",
+					"http://www.omnilog.fr");
+			break;
+		case 1:
+			societe = new Societe("Extia", Societe.type_societe.SSII,
+					"1 Avenue de la Cristallerie 92310 Sèvres",
+					"http://dadou93190.free.fr/img_logo_societes/logo_extia.png",
+					"http://www.extia.fr");
+			break;
+		case 2:
+			societe = new Societe("miLibris", Societe.type_societe.CLIENT_FINAL,
+					"21 rue de la banque 75002 Paris",
+					"http://dadou93190.free.fr/img_logo_societes/logo_milibris.jpg",
+					"http://www.milibris.fr");
+			break;
+		default:
+			break;
+		}
+		 
+		getDB().insertSociete(societe);
 	}
 
 	public void handleButtons(){
@@ -170,8 +192,14 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 		addSociete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View vue) {
+				fakeInitDB();
+				//ok but..
+				//mAdapter.swapCursor(getDB().getAllSocietes());
+				Loader<Cursor> loader = getLoaderManager().getLoader(1);
+				if (loader != null && loader.isStarted()) {
+					loader.forceLoad();
+				}
 			}
 		});
 	}
-
 }

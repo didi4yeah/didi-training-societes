@@ -25,7 +25,7 @@ public class ListTaffActivity extends Activity implements OnSocieteSelected {
 				.findFragmentById(R.id.detailSocietesFragment);
 		
 		//Si le fragment est déjà à l'écran on le met à jour (tablette),
-		//sinon on démarre une nouvelle activité (Smartphone). 
+		//sinon on démarre une nouvelle activité (smartphone). 
 		if ((fragment != null) && fragment.isInLayout()) {			
 			fragment.majDetails(societe_id, true);
 		} else {			

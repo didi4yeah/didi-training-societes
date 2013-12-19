@@ -20,6 +20,4 @@ public class SocieteDetailsActivity extends Activity {
 		fragment.setSocieteID(societe_id);
 //		fragment.majDetails(societe_id);
 	}
-
-
 }
