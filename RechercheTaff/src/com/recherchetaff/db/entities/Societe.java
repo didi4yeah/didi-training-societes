@@ -69,7 +69,5 @@ public class Societe {
 
 	public void setUrl_logo(String urlm_logo) {
 		this.url_logo = urlm_logo;
-	}
-	
-	
+	}	
 }

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.recherchetaff.R;
+import com.recherchetaff.R;
 import com.recherchetaff.fragments.SocieteDetailsFragment;
 import com.recherchetaff.fragments.SocieteListFragment.OnSocieteSelected;
 

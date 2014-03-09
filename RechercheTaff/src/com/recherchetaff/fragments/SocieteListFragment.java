@@ -20,11 +20,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.recherchetaff.R;
+import com.recherchetaff.R;
 import com.recherchetaff.adapters.MaListCursorAdapter;
 import com.recherchetaff.db.DataBaseOperation;
 import com.recherchetaff.db.entities.Societe;
-import com.recherchetaff.utils.SimpleCursorLoader;
+import com.recherchetaff.utils.MySimpleCursorLoader;
 
 public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cursor>  {
 
@@ -100,7 +100,7 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 //	}
 
 	//implement loadInBackground from abstract
-	public static final class ListCursorLoader extends SimpleCursorLoader {
+	public static final class ListCursorLoader extends MySimpleCursorLoader {
 
 		private DataBaseOperation mDB;
 
@@ -193,6 +193,7 @@ public class SocieteListFragment extends Fragment implements LoaderCallbacks<Cur
 				fakeInitDB();
 				//ok but..
 				//mAdapter.swapCursor(getDB().getAllSocietes());
+				//...better?
 				Loader<Cursor> loader = getLoaderManager().getLoader(1);
 				if (loader != null && loader.isStarted()) {
 					loader.forceLoad();

@@ -1,16 +1,19 @@
 package com.recherchetaff.db;
 
+import com.recherchetaff.db.entities.Contact;
 import com.recherchetaff.db.entities.Societe;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 public class DataBaseOperation {
 
-	private static final int VERSION_BDD = 18;
-	private static final String NOM_BDD = "societes.db";
+	private static final int VERSION_BDD = 11;
+	private static final String NOM_BDD = "taff.db";
 
 	private SQLiteDatabase bdd;
 	private DataBaseHandler dbh;
@@ -33,6 +36,11 @@ public class DataBaseOperation {
 		return bdd;
 	}
 
+	
+	/*
+	 * GETTERS
+	 */
+	
 	public Cursor getAllSocietes(){
 		Cursor c = bdd.query(DataBaseHandler.SOCIETE_TABLE_NAME,
 				new String[] { DataBaseHandler.SOCIETE_KEY, DataBaseHandler.SOCIETE_NAME, DataBaseHandler.SOCIETE_TYPE, DataBaseHandler.SOCIETE_ADRESSE},
@@ -47,7 +55,24 @@ public class DataBaseOperation {
 		
 		return cursorToSociete(c);
 	}
+	
+	public Cursor getContactsFromSociete(int societe_id){
+		Log.e("", "je cherche les contacts de societe_id = "+societe_id);
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		qb.setTables(DataBaseHandler.SOCIETE_TABLE_NAME + ","
+				+ DataBaseHandler.CONTACT_TABLE_NAME);
+//		qb.setDistinct(true);
+		Cursor c = qb.query(bdd, new String[] {DataBaseHandler.CONTACT_TABLE_NAME+".*"},
+				DataBaseHandler.SOCIETE_TABLE_NAME + "." + DataBaseHandler.SOCIETE_KEY + "=" + DataBaseHandler.CONTACT_SOCIETE_ID
+				+ " AND " + DataBaseHandler.CONTACT_SOCIETE_ID + "=?",
+				new String[] { ""+societe_id }, null, null, DataBaseHandler.CONTACT_NAME);		
+		return c;
+	}
 
+	/*
+	 * INSERTIONS
+	 */
+	
 	public long insertSociete(Societe societe){
 		ContentValues cv = new ContentValues();
 		cv.put(DataBaseHandler.SOCIETE_NAME, societe.getName());
@@ -57,7 +82,20 @@ public class DataBaseOperation {
 		cv.put(DataBaseHandler.SOCIETE_URL_SITE, societe.getUrl_site());	
 		return bdd.insertOrThrow(DataBaseHandler.SOCIETE_TABLE_NAME, null, cv);
 	}
+	
+	public long insertContact(Contact contact){
+		Log.e("", "je rajoute un contact");
+		ContentValues cv = new ContentValues();
+		cv.put(DataBaseHandler.CONTACT_NAME, contact.getName());
+		cv.put(DataBaseHandler.CONTACT_JOB, contact.getJob());
+		cv.put(DataBaseHandler.CONTACT_SOCIETE_ID, contact.getSociete_id());
+		return bdd.insertOrThrow(DataBaseHandler.CONTACT_TABLE_NAME, null, cv);
+	}
 
+	/*
+	 * UPDATES
+	 */
+	
 	public int updateSociete(long id, Societe societe){
 		ContentValues cv = new ContentValues();
 		cv.put(DataBaseHandler.SOCIETE_NAME, societe.getName());
@@ -67,10 +105,19 @@ public class DataBaseOperation {
 		cv.put(DataBaseHandler.SOCIETE_URL_SITE, societe.getUrl_site());
 		return bdd.update(DataBaseHandler.SOCIETE_TABLE_NAME, cv, DataBaseHandler.SOCIETE_KEY + "=?", new String[] { "" + id });
 	}
+	
+	/*
+	 * DELETES
+	 */
 
 	public int deleteSociete(int id){
 		return bdd.delete(DataBaseHandler.SOCIETE_TABLE_NAME, DataBaseHandler.SOCIETE_KEY + "=?", new String[] { "" + id });
 	}
+	
+	/*
+	 * To Objects
+	 */
+	
 
 	private Societe cursorToSociete(Cursor c){
 		//si aucun élément n'a été retourné dans la requête, on renvoie null
@@ -82,12 +129,12 @@ public class DataBaseOperation {
 		//On créé une societe
 		Societe societe = new Societe();
 		//on lui affecte toutes les infos grâce aux infos contenues dans le Cursor
-		societe.setId(c.getInt(0));
-		societe.setName(c.getString(1));
-		societe.setType(Societe.type_societe.valueOf(c.getString(2)));
-		societe.setAdresse(c.getString(3));
-		societe.setUrl_logo(c.getString(4));
-		societe.setUrl_site(c.getString(5));
+		societe.setId(c.getInt(c.getColumnIndex(DataBaseHandler.SOCIETE_KEY)));
+		societe.setName(c.getString(c.getColumnIndex(DataBaseHandler.SOCIETE_NAME)));
+		societe.setType(Societe.type_societe.valueOf(c.getString(c.getColumnIndex(DataBaseHandler.SOCIETE_TYPE))));
+		societe.setAdresse(c.getString(c.getColumnIndex(DataBaseHandler.SOCIETE_ADRESSE)));
+		societe.setUrl_logo(c.getString(c.getColumnIndex(DataBaseHandler.SOCIETE_URL_LOGO)));
+		societe.setUrl_site(c.getString(c.getColumnIndex(DataBaseHandler.SOCIETE_URL_SITE)));
 		//On ferme le cursor
 		c.close();
 

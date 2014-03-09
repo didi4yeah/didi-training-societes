@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.example.recherchetaff.R;
+import com.recherchetaff.R;
 import com.recherchetaff.db.DataBaseHandler;
 import com.recherchetaff.db.entities.Societe;
 
@@ -34,8 +34,7 @@ public final class MaListCursorAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view = LayoutInflater.from(mContext).inflate(R.layout.list_societes_entry,
-				parent, false);
+		View view = LayoutInflater.from(mContext).inflate(R.layout.list_societes_entry, parent, false);
 		ViewHolder viewHolder = new ViewHolder();
 		viewHolder.societeName = (TextView) view.findViewById(R.id.tv_list_societe_name);
 		viewHolder.societeType = (TextView) view.findViewById(R.id.tv_list_societe_type);
@@ -56,7 +55,7 @@ public final class MaListCursorAdapter extends CursorAdapter {
 		} else {
 			viewHolder.societeType.setText("SSII");
 		}
-		
+
 		viewHolder.societeAddress.setText(address);
 	}
 }

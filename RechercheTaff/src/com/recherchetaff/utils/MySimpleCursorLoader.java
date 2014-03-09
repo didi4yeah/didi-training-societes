@@ -12,10 +12,10 @@ import android.database.Cursor;
  *
  * This was based on the CursorLoader class
  */
-public abstract class SimpleCursorLoader extends AsyncTaskLoader<Cursor> {
+public abstract class MySimpleCursorLoader extends AsyncTaskLoader<Cursor> {
     private Cursor mCursor;
 
-    public SimpleCursorLoader(Context context) {
+    public MySimpleCursorLoader(Context context) {
         super(context);
     }
 
